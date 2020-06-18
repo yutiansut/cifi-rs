@@ -17,8 +17,10 @@ impl QARedis {
     }
 
     pub fn get(&mut self, key: &str){
-        println!("{:?}",self.conn.get(key));
     }
+
+
+
 }
 
 
@@ -29,6 +31,9 @@ mod tests {
     #[test]
     fn test_redis() {
         let mut rd = QARedis::new("redis://127.0.0.1/");
-        println!("{:#?}", rd.get("name"));
+        con.set("my_key", 42).unwrap();
+        con.set("my_name", "jack").unwrap();
+        let count : i32 = con.get("my_key").unwrap();
+        println!("{:?}",count);
     }
 }
