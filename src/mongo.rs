@@ -12,6 +12,10 @@ use mongodb::{
 };
 use serde::Serialize;
 
+mod util{
+    pub use mongodb::bson::doc;
+}
+
 pub fn struct_to_doc<T>(value: T) -> Document
     where
         T: Serialize + std::fmt::Debug
@@ -109,9 +113,10 @@ mod tests {
         let client = QAMongoClient::new("mongodb://192.168.2.117:27017");
         let coll = client.database("cifitest").collection("mama");
         // test_insert(&coll);
-        test_find(&coll);
+        // test_find(&coll);
         // test_update(&coll);
         // test_delete(&coll);
+
     }
 
     fn test_insert(coll: &QACollection) {
