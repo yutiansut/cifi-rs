@@ -31,9 +31,9 @@ mod tests {
     #[test]
     fn test_redis() {
         let mut rd = QARedis::new("redis://127.0.0.1/");
-        con.set("my_key", 42).unwrap();
-        con.set("my_name", "jack").unwrap();
-        let count : i32 = con.get("my_key").unwrap();
-        println!("{:?}",count);
+        // rd.conn.set("my_key", 42).unwrap();
+        // rd.conn.set("my_name", "jack").unwrap();
+        // let count : i32 = rd.conn.get("my_key").unwrap();
+        // println!("{:?}",count);
     }
 }

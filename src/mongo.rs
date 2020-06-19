@@ -54,7 +54,7 @@ pub struct QACollection {
 }
 
 impl QACollection {
-    /// 以下为了快速使用作简单封装，如需高级操作请自行 coll.method 原函数
+    // 以下为了快速使用作简单封装，如需高级操作请自行 coll.method 原函数
     pub fn insert_one(&self, doc: Document, options: Document) -> Result<InsertOneResult> {
         self.coll.insert_one(doc, None)
     }
@@ -76,13 +76,16 @@ impl QACollection {
     }
 
     pub fn update_many(&self, query: Document, update: Document, options: Document) -> Result<UpdateResult> {
-        /// update 格式要求 doc! {"$set": { "age": 18}} 以 $操作为key
+        // update 格式要求 doc! {"$set": { "age": 18}} 以 $操作为key
         self.coll.update_many(query, update, None)
     }
 
-    pub fn find_one(&self, filter: Document, options: Document) -> Option<Document> {
+    pub fn find_one(&self, filter: Document, options: Document) -> Document {
         let find_options = FindOneOptions::builder().projection(options).build();
-        self.coll.find_one(filter, find_options).expect("Failed to execute find_one.")
+        match self.coll.find_one(filter, find_options).expect("Failed to execute find_one.") {
+            Some(doc) => doc,
+            None => Document::new()
+        }
     }
 
     pub fn find(&self, filter: Document, options: Document) -> Vec<Document> {
@@ -106,9 +109,9 @@ mod tests {
         let client = QAMongoClient::new("mongodb://192.168.2.117:27017");
         let coll = client.database("cifitest").collection("mama");
         // test_insert(&coll);
-        // test_find(&coll);
+        test_find(&coll);
         // test_update(&coll);
-        test_delete(&coll);
+        // test_delete(&coll);
     }
 
     fn test_insert(coll: &QACollection) {
@@ -123,8 +126,8 @@ mod tests {
     }
 
     fn test_find(coll: &QACollection) {
-        let findone = coll.find_one(doc! {}, doc! {"_id":0,"age":1});
-        println!("{:#?}", findone.unwrap());
+        let findone = coll.find_one(doc! {"name":"qa3"}, doc! {"_id":0,"age":1});
+        println!("{:#?}", findone);
         let find = coll.find(doc! {}, doc! {"_id":0,"name":1});
         println!("{:#?}", find);
         let find = coll.find(struct_to_doc(A { name: "qa3".to_string() }), doc! {});
